@@ -1,6 +1,5 @@
 ![image](https://github.com/ImSirTea/DigitalWonderlab/assets/45457205/a39eb2c1-cf07-44d7-9c02-d83920a86b5a)
-![image](https://github.com/ImSirTea/DigitalWonderlab/assets/45457205/e63ac9a9-3360-4358-bbb4-99d930bd3bf8)
-
+![image](https://github.com/ImSirTea/DigitalWonderlab/assets/45457205/d4f39547-e6f5-429d-9d71-829e08b56ee1)
 
 # Getting Started with Create React App
 
