@@ -1,10 +1,10 @@
 import React from "react";
-import LandingSearch from "./views/landing/LandingSearch";
+import NasaImageSearch from "./views/nasa-search/NasaImageSearch";
 
 function App() {
   return (
     <main>
-      <LandingSearch />
+      <NasaImageSearch/>
     </main>
   );
 }

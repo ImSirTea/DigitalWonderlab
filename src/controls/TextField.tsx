@@ -1,11 +1,9 @@
-import {
-  TextField as MuiTextField,
-  TextFieldProps as MuiTextFieldProps,
-} from "@mui/material";
-import { ChangeEvent, FunctionComponent } from "react";
+import {TextField as MuiTextField, TextFieldProps as MuiTextFieldProps,} from "@mui/material";
+import {ChangeEvent, FunctionComponent, KeyboardEvent} from "react";
 
 export interface TextFieldProps extends Omit<MuiTextFieldProps, "onChange"> {
   onChange?: (value: string) => void;
+  onSubmit?: () => void;
 }
 
 /**
@@ -13,10 +11,11 @@ export interface TextFieldProps extends Omit<MuiTextFieldProps, "onChange"> {
  * @param props The props for this element
  */
 export const TextField: FunctionComponent<TextFieldProps> = ({
-  onChange,
-  onKeyDown,
-  ...remaining
-}) => {
+                                                               onChange,
+                                                               onSubmit,
+                                                               onKeyDown,
+                                                               ...remaining
+                                                             }) => {
   /**
    * Handles calling onChange callback when value is updated
    * @param event The change event
@@ -27,9 +26,24 @@ export const TextField: FunctionComponent<TextFieldProps> = ({
     }
   };
 
+  /**
+   * Handles firing an onEnter event when ENTER is pressed.
+   * @param event The keyboard event
+   */
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (onKeyDown) {
+      onKeyDown(event);
+    }
+
+    if (onSubmit && event.key === "Enter") {
+      onSubmit();
+    }
+  };
+
   return (
     <MuiTextField
       onChange={handleOnChange}
+      onKeyDown={handleKeyDown}
       variant="outlined"
       {...remaining}
     ></MuiTextField>

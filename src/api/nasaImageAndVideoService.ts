@@ -1,4 +1,6 @@
 // Property names are shaped to fit the API directly, so that they can be more easily mapped onto the api call itself
+import {isNotNullOrUndefined} from "../utils/apiHelpers";
+
 type NasaImageAndVideoFilter = {
   q: string;
   location: string;
@@ -15,7 +17,11 @@ type NasaImageAndVideoResponse = {
   collection: {
     version: string; // API Version
     href: string; // Search term
-    items: NasaImageAndVideoItem[];
+    items: {
+      data: NasaImageAndVideoItemApiData[];
+      href: string;
+      links?: NasaImageAndVideoLink[];
+    }[];
     metadata: {
       total_hits: number;
     };
@@ -23,25 +29,32 @@ type NasaImageAndVideoResponse = {
   };
 };
 
-type NasaImageAndVideoItem = {
-  data: NasaImageAndVideoItemData[];
+type NasaImageAndVideoLink = {
+  href: string, ref: string, render: string
+}
+
+export type NasaImageAndVideoItem = {
+  data: NasaImageAndVideoItemData;
   href: string;
-  links: unknown[]; // @TODO: Currently unimportant
 };
 
-type NasaImageAndVideoItemData = {
-  date_created: string; // @TODO: Is this actually a date type?
+type NasaImageAndVideoItemApiData = {
+  date_created: string;
   description_508: string;
 } & NasaImageAndVideoQueryableProperties;
 
 type NasaImageAndVideoQueryableProperties = {
   center: string;
   description: string;
-  keywords: string[]; // CSV
+  keywords?: string[]; // CSV
   nasa_id: string;
   secondary_creator: string;
   title: string;
 };
+
+export type NasaImageAndVideoItemData =
+  Omit<NasaImageAndVideoItemApiData, "date_created">
+  & { date_created: Date, image_src: string | null };
 
 /**
  * Query params need to be strings, so parse them accordingly based on their type
@@ -65,7 +78,21 @@ function parseNasaImageAndVideoFilterProperty(
 export class NasaImageAndVideoService {
   static readonly nasaImageAndVideoServiceUrl = "https://images-api.nasa.gov/";
 
-  async getImageOrVideoByFilter(
+  private mapApiDataToUsableData(data: NasaImageAndVideoItemApiData, link: NasaImageAndVideoLink): NasaImageAndVideoItemData {
+    return {
+      center: data.center,
+      date_created: new Date(data.date_created),
+      description: data.description,
+      description_508: data.description_508,
+      keywords: data.keywords,
+      nasa_id: data.nasa_id,
+      secondary_creator: data.secondary_creator,
+      title: data.title,
+      image_src: link.render === "image" ? link.href : null,
+    };
+  }
+
+  public async getImageOrVideoByFilter(
     filter: Partial<NasaImageAndVideoFilter>
   ): Promise<NasaImageAndVideoItem[]> {
     const imageOrVideoSearchUrl = new URL(
@@ -95,7 +122,17 @@ export class NasaImageAndVideoService {
 
     const responseJson: NasaImageAndVideoResponse = await response.json();
 
-    return responseJson.collection.items;
+    return responseJson.collection.items.map((item): NasaImageAndVideoItem | null => {
+      // Ignore our empty cases, could be made an error but there's no need
+      if (!item.data.length || !item.links?.length) {
+        return null;
+      }
+      
+      return {
+        href: item.href,
+        data: this.mapApiDataToUsableData(item.data[0], item.links[0])
+      };
+    }).filter(isNotNullOrUndefined);
   }
 }
 
