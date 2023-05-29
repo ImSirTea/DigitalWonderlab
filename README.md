@@ -1,3 +1,7 @@
+![image](https://github.com/ImSirTea/DigitalWonderlab/assets/45457205/a39eb2c1-cf07-44d7-9c02-d83920a86b5a)
+![image](https://github.com/ImSirTea/DigitalWonderlab/assets/45457205/e63ac9a9-3360-4358-bbb4-99d930bd3bf8)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
