@@ -8,6 +8,7 @@ interface NasaImageGalleryProps {
   imageDetails: NasaImageAndVideoItem[];
 }
 
+
 export const NasaImageGallery: FunctionComponent<NasaImageGalleryProps> = ({imageDetails}) => {
   const nasaImageCards = useMemo(() => imageDetails.map((details) =>
       <NasaImageCard key={details.data.nasa_id}
@@ -19,7 +20,7 @@ export const NasaImageGallery: FunctionComponent<NasaImageGalleryProps> = ({imag
     <Box>
       <ImagesMasonry children={nasaImageCards}/>
     </Box>
-  </Container>
-}
+  </Container>;
+};
 
 export default NasaImageGallery;

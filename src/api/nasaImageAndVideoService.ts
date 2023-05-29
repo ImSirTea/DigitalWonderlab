@@ -1,4 +1,6 @@
 // Property names are shaped to fit the API directly, so that they can be more easily mapped onto the api call itself
+import {isNotNullOrUndefined} from "../utils/apiHelpers";
+
 type NasaImageAndVideoFilter = {
   q: string;
   location: string;
@@ -18,7 +20,7 @@ type NasaImageAndVideoResponse = {
     items: {
       data: NasaImageAndVideoItemApiData[];
       href: string;
-      links: NasaImageAndVideoLink[];
+      links?: NasaImageAndVideoLink[];
     }[];
     metadata: {
       total_hits: number;
@@ -44,7 +46,7 @@ type NasaImageAndVideoItemApiData = {
 type NasaImageAndVideoQueryableProperties = {
   center: string;
   description: string;
-  keywords: string[]; // CSV
+  keywords?: string[]; // CSV
   nasa_id: string;
   secondary_creator: string;
   title: string;
@@ -87,7 +89,7 @@ export class NasaImageAndVideoService {
       secondary_creator: data.secondary_creator,
       title: data.title,
       image_src: link.render === "image" ? link.href : null,
-    }
+    };
   }
 
   public async getImageOrVideoByFilter(
@@ -120,10 +122,17 @@ export class NasaImageAndVideoService {
 
     const responseJson: NasaImageAndVideoResponse = await response.json();
 
-    return responseJson.collection.items.map((item): NasaImageAndVideoItem => ({
-      href: item.href,
-      data: this.mapApiDataToUsableData(item.data[0], item.links[0])
-    }))
+    return responseJson.collection.items.map((item): NasaImageAndVideoItem | null => {
+      // Ignore our empty cases, could be made an error but there's no need
+      if (!item.data.length || !item.links?.length) {
+        return null;
+      }
+      
+      return {
+        href: item.href,
+        data: this.mapApiDataToUsableData(item.data[0], item.links[0])
+      };
+    }).filter(isNotNullOrUndefined);
   }
 }
 

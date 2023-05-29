@@ -32,7 +32,10 @@
       "react-app",
       "react-app/jest",
       "prettier"
-    ]
+    ],
+    "rules": {
+      "semi": "error"
+    }
   },
   "browserslist": {
     "production": [
