@@ -44,6 +44,7 @@ const NasaImageCard: FunctionComponent<NasaImageCardProps> = ({imageDetails}) =>
       <CardMedia
         component="img"
         height="260"
+        loading="lazy"
         image={imageDetails.data.image_src ?? ""}
         alt={imageDetails.data.title}
       />
