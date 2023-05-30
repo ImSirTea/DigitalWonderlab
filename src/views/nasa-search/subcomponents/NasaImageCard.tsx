@@ -8,16 +8,17 @@ import {stringToHslColor} from "../../../utils/colours";
 
 interface NasaImageCardProps {
   imageDetails: NasaImageAndVideoItem;
+  onShare: () => void;
 }
 
-const NasaImageCard: FunctionComponent<NasaImageCardProps> = ({imageDetails}) => {
+const NasaImageCard: FunctionComponent<NasaImageCardProps> = ({imageDetails, onShare}) => {
   const [isFavourite, setIsFavourite] = useState(false);
-
+  
   const handleFavouriteClick = () => {
     //@TODO: Saving logic - not available on API. Could pretend with localStorage/idb
     setIsFavourite(!isFavourite);
   };
-
+  
   const keywordChips = useMemo(() =>
       imageDetails.data.keywords?.map((keyword) =>
         <Chip key={keyword}
@@ -33,7 +34,7 @@ const NasaImageCard: FunctionComponent<NasaImageCardProps> = ({imageDetails}) =>
         />)
       ?? null
     , [imageDetails]);
-
+  
   return (
     <Card sx={{maxWidth: 345}}>
       <CardHeader
@@ -53,7 +54,7 @@ const NasaImageCard: FunctionComponent<NasaImageCardProps> = ({imageDetails}) =>
           {imageDetails.data.date_created.toDateString()}
         </Typography>
         <FavouriteButton isFavourite={isFavourite} aria-label="add to favorites" onClick={handleFavouriteClick}/>
-        <IconButton aria-label="share">
+        <IconButton aria-label="share" onClick={onShare}>
           <ShareIcon/>
         </IconButton>
       </CardActions>
