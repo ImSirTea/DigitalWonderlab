@@ -1,0 +1,7 @@
+.lava-lamp-canvas {
+    z-index: -1;
+    position: absolute;
+    overflow: hidden;
+    width: 99vw;
+    height: 100vh;
+}

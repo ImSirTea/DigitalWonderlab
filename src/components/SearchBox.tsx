@@ -1,4 +1,4 @@
-import {forwardRef, useState} from "react";
+import {FunctionComponent, useState} from "react";
 import {
   Card,
   CardActions,
@@ -21,32 +21,32 @@ interface SearchBoxProps {
   onSearch: (searchTerm: string) => void;
 }
 
-export const NasaImageSearchBox = forwardRef<HTMLDivElement, SearchBoxProps>(({
-                                                                                initialSearchTerm = "",
-                                                                                onSearch,
-                                                                                searchText = "Search",
-                                                                                isLoading = false,
-                                                                                title = "",
-                                                                                description = ""
-                                                                              }, ref) => {
+export const NasaImageSearchBox: FunctionComponent<SearchBoxProps> = ({
+                                                                        initialSearchTerm = "",
+                                                                        onSearch,
+                                                                        searchText = "Search",
+                                                                        isLoading = false,
+                                                                        title = "",
+                                                                        description = ""
+                                                                      }) => {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [errorMessage, setErrorMessage] = useState("");
-
-
+  
+  
   const cardTitle = title ? <CardHeader title={title}/> : null;
   const cardDescription = description ? <Typography paragraph={true}>{description}</Typography> : null;
-
+  
   const onSubmitSearch = () => {
     if (searchTerm === "") {
       setErrorMessage("A value must be provided");
       return;
     }
-
+    
     setErrorMessage("");
     onSearch(searchTerm);
   };
   return (
-    <Container ref={ref}>
+    <Container>
       <Card>
         {cardTitle}
         <CardContent>
@@ -59,6 +59,7 @@ export const NasaImageSearchBox = forwardRef<HTMLDivElement, SearchBoxProps>(({
               onChange={(newSearchTerm) => setSearchTerm(newSearchTerm)}
               onSubmit={() => onSubmitSearch()}
               placeholder="Start your search..."
+              autoFocus
             />
           </FormGroup>
         </CardContent>
@@ -80,6 +81,6 @@ export const NasaImageSearchBox = forwardRef<HTMLDivElement, SearchBoxProps>(({
       </Card>
     </Container>
   );
-});
+};
 
 export default NasaImageSearchBox;

@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import 'context-filter-polyfill'; // Some canvas apis don't work correctly on Safari (shocker)
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -20,6 +23,7 @@ root.render(
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
       <App/>
+      <ToastContainer theme="dark"/>
     </ThemeProvider>
   </React.StrictMode>
 );
